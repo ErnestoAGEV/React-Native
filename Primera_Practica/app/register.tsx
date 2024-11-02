@@ -15,7 +15,11 @@ const InputContainer = styled.View`
   margin-bottom: 15px;
 `;
 
-const StyledTextInput = styled.TextInput`
+interface StyledTextInputProps {
+  error: boolean;
+}
+
+const StyledTextInput = styled.TextInput<StyledTextInputProps>`
   height: 50px;
   width: 100%;
   border-color: ${props => props.error ? '#ff0000' : '#ddd'};

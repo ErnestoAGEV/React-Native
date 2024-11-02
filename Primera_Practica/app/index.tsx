@@ -100,12 +100,21 @@ export default function App() {
   };
 
   // Función para validar email
-  const validateEmail = (email) => {
+  interface ValidationResult {
+    isValid: boolean;
+    errors: {
+      uppercase: boolean;
+      specialChar: boolean;
+      minLength: boolean;
+    };
+  }
+
+  const validateEmail = (email: string): boolean => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
-  const validatePassword = (password) => {
+  const validatePassword = (password: string): ValidationResult => {
     const hasUpperCase = /[A-Z]/.test(password);
     const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
     const hasMinLength = password.length >= 8;
@@ -146,30 +155,26 @@ export default function App() {
 
   const handleSubmit = () => {
     if (validateForm()) {
-      Alert.alert(
-        'Éxito',
-        'Inicio de sesión exitoso',
-        [
-          {
-            text: 'OK',
-            onPress: () => {
-              setEmail('');
-              setPassword('');
-              setErrors({ email: '', password: '' });
-            }
-          }
-        ],
-        { cancelable: false }
-      );
+      Alert.alert('Éxito', 'Inicio de sesión exitoso');  // Sin el botón y cancelable
+      setEmail('');
+      setPassword('');
+      setErrors({ email: '', password: '' });
     } else {
-      Alert.alert(
-        'Error de validación',
-        'Por favor, verifica los datos ingresados',
-        [{ text: 'OK' }],
-        { cancelable: false }
-      );
+      // Aquí debe ser la alerta correcta para email inválido
+      const newErrors = { email: '', password: '' };
+      if (!validateEmail(email)) {
+        newErrors.email = 'Por favor, ingresa un correo electrónico válido';
+        Alert.alert(
+          'El correo electrónico es requerido',
+          'Por favor, ingresa un correo electrónico válido'
+        );
+      } else {
+        Alert.alert('Error', 'La contraseña no cumple con los requisitos');
+      }
     }
   };
+  
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -187,10 +192,11 @@ export default function App() {
                 source={require("./src/logo-udc.png")}
                 style={styles.logo}
                 resizeMode="contain"
+                testID="icon-image"
               />
             </ImageContainer>
 
-            <TextContainer>Iniciar Sesión</TextContainer>
+            <TextContainer>Bienvenido</TextContainer>
 
             <InputContainer>
               <StyledTextInput
