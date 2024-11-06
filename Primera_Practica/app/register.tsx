@@ -143,7 +143,7 @@ export default function Register() {
     <MainContainer>
       <InputContainer>
         <StyledTextInput
-          placeholder="Email"
+          placeholder="Correo Electrónico"
           value={formData.email}
           onChangeText={(text) => setFormData({...formData, email: text})}
           error={!!errors.email}
@@ -154,12 +154,13 @@ export default function Register() {
       </InputContainer>
 
       <InputContainer>
-        <StyledTextInput
-          placeholder="Nombre de Usuario"
-          value={formData.username}
-          onChangeText={(text) => setFormData({...formData, username: text})}
-          error={!!errors.username}
-        />
+      <StyledTextInput
+        placeholder="Nombre de Usuario"  // Placeholder exacto
+        value={formData.username}
+        onChangeText={(text) => setFormData({...formData, username: text})}
+        error={!!errors.username}
+      />
+
         {errors.username ? <ErrorText>{errors.username}</ErrorText> : null}
       </InputContainer>
 
