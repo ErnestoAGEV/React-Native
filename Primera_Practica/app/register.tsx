@@ -1,28 +1,26 @@
 import React, { useState } from "react";
-import { View, Text, Platform, Alert } from "react-native";
+import { View, Text, Platform, Alert, KeyboardAvoidingView, ScrollView } from "react-native";
 import styled from "styled-components/native";
+import { useRouter } from "expo-router"; // Para navegación en Expo Web y Móvil
 
-const MainContainer = styled.View`
+const MainContainer = styled(KeyboardAvoidingView)`
   flex: 1;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   background-color: #f5fcff;
+  padding: 20px;
 `;
 
-const InputContainer = styled.View`
+const InputContainer = styled(View)`
   width: 100%;
   max-width: 300px;
   margin-bottom: 15px;
 `;
 
-interface StyledTextInputProps {
-  error: boolean;
-}
-
-const StyledTextInput = styled.TextInput<StyledTextInputProps>`
+const StyledTextInput = styled.TextInput`
   height: 50px;
   width: 100%;
-  border-color: ${props => props.error ? '#ff0000' : '#ddd'};
+  border-color: ${(props) => (props.error ? "#ff0000" : "#ddd")};
   border-width: 1px;
   border-radius: 8px;
   padding: 10px 15px;
@@ -30,7 +28,7 @@ const StyledTextInput = styled.TextInput<StyledTextInputProps>`
   font-size: 16px;
 `;
 
-const ErrorText = styled.Text`
+const ErrorText = styled(Text)`
   color: #ff0000;
   font-size: 12px;
   margin-top: 5px;
@@ -45,20 +43,19 @@ const ButtonContainer = styled.TouchableOpacity`
   max-width: 300px;
   margin-top: 20px;
   elevation: 3;
-  ${Platform.select({
-    ios: `
-      shadow-color: #000;
-      shadow-offset: 0px 2px;
-      shadow-opacity: 0.25;
-      shadow-radius: 3.84px;
-    `,
-    android: `
-      elevation: 5;
-    `
-  })}
 `;
 
-const ButtonText = styled.Text`
+const BackButton = styled.TouchableOpacity`
+  background-color: #007bff;
+  padding: 15px 20px;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 20px;
+  elevation: 3;
+`;
+
+const ButtonText = styled(Text)`
   color: white;
   font-weight: bold;
   font-size: 16px;
@@ -67,64 +64,60 @@ const ButtonText = styled.Text`
 
 export default function Register() {
   const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    password: '',
-    confirmPassword: ''
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({
-    email: '',
-    username: '',
-    password: '',
-    confirmPassword: ''
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
   });
 
-  // Regex para validar email
+  const router = useRouter(); // Para navegación
+
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
-  // Regex para validar contraseña (mínimo 8 caracteres, 1 mayúscula y 1 carácter especial)
   const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.{8,})/;
 
   const validateForm = () => {
     let isValid = true;
     const newErrors = {
-      email: '',
-      username: '',
-      password: '',
-      confirmPassword: ''
+      email: "",
+      username: "",
+      password: "",
+      confirmPassword: "",
     };
 
-    // Validación de email
     if (!formData.email) {
-      newErrors.email = 'El email es requerido';
+      newErrors.email = "El email es requerido";
       isValid = false;
     } else if (!emailRegex.test(formData.email)) {
-      newErrors.email = 'El email no es válido';
+      newErrors.email = "El email no es válido";
       isValid = false;
     }
 
-    // Validación de username
     if (!formData.username) {
-      newErrors.username = 'El nombre de usuario es requerido';
+      newErrors.username = "El nombre de usuario es requerido";
       isValid = false;
     }
 
-    // Validación de contraseña
     if (!formData.password) {
-      newErrors.password = 'La contraseña es requerida';
+      newErrors.password = "La contraseña es requerida";
       isValid = false;
     } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres, 1 mayúscula y 1 carácter especial';
+      newErrors.password =
+        "La contraseña debe tener al menos 8 caracteres, 1 mayúscula y 1 carácter especial";
       isValid = false;
     }
 
-    // Validación de confirmación de contraseña
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'La confirmación de contraseña es requerida';
+      newErrors.confirmPassword = "La confirmación de contraseña es requerida";
       isValid = false;
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      newErrors.confirmPassword = "Las contraseñas no coinciden";
       isValid = false;
     }
 
@@ -132,63 +125,101 @@ export default function Register() {
     return isValid;
   };
 
+  const handleAlert = (title: string, message: string) => {
+    if (Platform.OS === "web") {
+      window.alert(`${title}: ${message}`);
+    } else {
+      Alert.alert(title, message);
+    }
+  };
+
   const handleSubmit = () => {
     if (validateForm()) {
-      Alert.alert('Éxito', 'Formulario validado correctamente');
-      // Aquí iría la lógica para enviar los datos al servidor
+      if (Platform.OS === "web") {
+        window.location.href = "/";
+      } else {
+        router.push("/");
+      }
+    } else {
+      handleAlert("Error", "Por favor, corrige los errores en el formulario.");
+    }
+  };
+
+  const handleBack = () => {
+    if (Platform.OS === "web") {
+      window.location.href = "/";
+    } else {
+      router.push("/");
     }
   };
 
   return (
-    <MainContainer>
-      <InputContainer>
-        <StyledTextInput
-          placeholder="Correo Electrónico"
-          value={formData.email}
-          onChangeText={(text) => setFormData({...formData, email: text})}
-          error={!!errors.email}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        {errors.email ? <ErrorText>{errors.email}</ErrorText> : null}
-      </InputContainer>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <MainContainer behavior={Platform.OS === "ios" ? "padding" : undefined}>
+        <InputContainer>
+          <StyledTextInput
+            placeholder="Email"
+            value={formData.email}
+            onChangeText={(text) => setFormData({ ...formData, email: text })}
+            error={!!errors.email}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            testID="input-email" // testID para pruebas
+          />
+          {errors.email ? <ErrorText>{errors.email}</ErrorText> : null}
+        </InputContainer>
 
-      <InputContainer>
-      <StyledTextInput
-        placeholder="Nombre de Usuario"  // Placeholder exacto
-        value={formData.username}
-        onChangeText={(text) => setFormData({...formData, username: text})}
-        error={!!errors.username}
-      />
+        <InputContainer>
+          <StyledTextInput
+            placeholder="Nombre de Usuario"
+            value={formData.username}
+            onChangeText={(text) =>
+              setFormData({ ...formData, username: text })
+            }
+            error={!!errors.username}
+            testID="input-username" // testID para pruebas
+          />
+          {errors.username ? <ErrorText>{errors.username}</ErrorText> : null}
+        </InputContainer>
 
-        {errors.username ? <ErrorText>{errors.username}</ErrorText> : null}
-      </InputContainer>
+        <InputContainer>
+          <StyledTextInput
+            placeholder="Contraseña"
+            value={formData.password}
+            onChangeText={(text) =>
+              setFormData({ ...formData, password: text })
+            }
+            error={!!errors.password}
+            secureTextEntry={true}
+            testID="input-password" // testID para pruebas
+          />
+          {errors.password ? <ErrorText>{errors.password}</ErrorText> : null}
+        </InputContainer>
 
-      <InputContainer>
-        <StyledTextInput
-          placeholder="Contraseña"
-          value={formData.password}
-          onChangeText={(text) => setFormData({...formData, password: text})}
-          error={!!errors.password}
-          secureTextEntry={true}
-        />
-        {errors.password ? <ErrorText>{errors.password}</ErrorText> : null}
-      </InputContainer>
+        <InputContainer>
+          <StyledTextInput
+            placeholder="Confirmar Contraseña"
+            value={formData.confirmPassword}
+            onChangeText={(text) =>
+              setFormData({ ...formData, confirmPassword: text })
+            }
+            error={!!errors.confirmPassword}
+            secureTextEntry={true}
+            testID="input-confirm-password" // testID para pruebas
+          />
+          {errors.confirmPassword ? (
+            <ErrorText>{errors.confirmPassword}</ErrorText>
+          ) : null}
+        </InputContainer>
 
-      <InputContainer>
-        <StyledTextInput
-          placeholder="Confirmar Contraseña"
-          value={formData.confirmPassword}
-          onChangeText={(text) => setFormData({...formData, confirmPassword: text})}
-          error={!!errors.confirmPassword}
-          secureTextEntry={true}
-        />
-        {errors.confirmPassword ? <ErrorText>{errors.confirmPassword}</ErrorText> : null}
-      </InputContainer>
+        <ButtonContainer activeOpacity={0.8} onPress={handleSubmit} testID="register-button">
+          <ButtonText>Registrarse</ButtonText>
+        </ButtonContainer>
 
-      <ButtonContainer activeOpacity={0.8} onPress={handleSubmit}>
-        <ButtonText>Registrarse</ButtonText>
-      </ButtonContainer>
-    </MainContainer>
+        <BackButton activeOpacity={0.8} onPress={handleBack} testID="back-button">
+          <ButtonText>Atrás</ButtonText>
+        </BackButton>
+      </MainContainer>
+    </ScrollView>
   );
 }
