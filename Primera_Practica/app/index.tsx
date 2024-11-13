@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { View, Image, Text, TextInput, Alert, TouchableOpacity, StyleSheet, SafeAreaView, Platform, KeyboardAvoidingView, ScrollView } from "react-native";
 import styled from "styled-components/native";
 import { useRouter } from "expo-router";
+import {getMusicData} from './api-client';
+
 
 // Styled Components
 const MainContainer = styled.View`
@@ -84,6 +86,8 @@ const ErrorText = styled.Text`
 `;
 
 export default function App() {
+  
+  getMusicData().then(data => console.warn(data));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({

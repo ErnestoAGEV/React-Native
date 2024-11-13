@@ -28,7 +28,7 @@ it('validates email' , ()=> {
     render(<Index/>);
     const emailImput = screen.getByPlaceholderText('Correo Electrónico');
     const button = screen.getByText('Iniciar Sesión');
-    fireEvent.changeText(emailImput, 'user@')
+    fireEvent.changeText(emailImput, 'xxx')
     fireEvent.press(button);
     expect(Alert.alert).toHaveBeenCalledWith(
         'El correo electrónico es requerido',
