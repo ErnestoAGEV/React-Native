@@ -22,7 +22,7 @@ resize-mode: contain;
 const Info = styled(View)`
 flex: 1;
 flex-direction: column;
-aligh-items: center;
+align-items: center;
 justify-content: center;
 `;
 
