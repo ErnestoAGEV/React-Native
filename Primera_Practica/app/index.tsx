@@ -87,7 +87,6 @@ const ErrorText = styled.Text`
 
 export default function App() {
   
-  getMusicData().then(data => console.warn(data));
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({
@@ -100,6 +99,12 @@ export default function App() {
   const onPressLearnMore = () => {
     router.push({
       pathname: "./register",
+    });
+  };
+
+  const onPressShowArtist = () => {
+    router.push({
+      pathname: "./home",
     });
   };
 
@@ -159,10 +164,7 @@ export default function App() {
 
   const handleSubmit = () => {
     if (validateForm()) {
-      Alert.alert('Éxito', 'Inicio de sesión exitoso');  // Sin el botón y cancelable
-      setEmail('');
-      setPassword('');
-      setErrors({ email: '', password: '' });
+      onPressShowArtist();
     } else {
       // Aquí debe ser la alerta correcta para email inválido
       const newErrors = { email: '', password: '' };

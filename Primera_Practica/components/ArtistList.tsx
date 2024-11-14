@@ -11,6 +11,7 @@ export default function ArtistList({artists }: {artists: Artist[]}) {
         pathname : "/ArtistDetailView",
         params: {id: artists.id, name: artists.name, image:artists.image},
     });
+    
 
     return(
         <View>

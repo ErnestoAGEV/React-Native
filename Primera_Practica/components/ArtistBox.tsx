@@ -9,7 +9,7 @@ background-color: white;
 flex-direction: row;
 shadow-color:black;
 shadow-opacity: 0.1;
-shadow-offset: 1px-2px;
+shadow-offset: 1px -2px;
 elevation: 2;
 `;
 
