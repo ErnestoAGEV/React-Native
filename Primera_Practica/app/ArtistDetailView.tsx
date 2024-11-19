@@ -19,8 +19,8 @@ const MainContainer = styled(View)`
 `;
 
 const ImageContainer = styled(Image)`
-  width: 70%;
-  height: 200px;
+  width: 50%;
+  height: 300px;
   resize-mode: cover;
   border-radius: 8px;
     margin-top: 10px;
@@ -45,20 +45,25 @@ interface ArtistDetailViewProps {
 }
 
 const ArtistDetailView: React.FC<ArtistDetailViewProps> = () => {
-    const {id, name, image} = useLocalSearchParams();
+  const { id, name, image } = useLocalSearchParams();
 
-    console.log('ArtistDetailView', {id, name, image});
+  console.log("ArtistDetailView", { id, name, image });
 
-    return (
-        <ScrollView>
-            <MainContainer>
-                <ImageContainer source={{uri: Array.isArray(image) ? image[0] : image}} />
-                <ArtistName>{name}</ArtistName>
-                <ArtistDetails>{id}</ArtistDetails>
-            </MainContainer>
-        </ScrollView>
-    );
-
-}
+  return (
+    <ScrollView>
+      <MainContainer>
+        {image && (
+          <ImageContainer
+            source={{ uri: Array.isArray(image) ? image[0] : image }}
+            accessibilityRole="image"
+            testID="artist-image"
+          />
+        )}
+        {name && <ArtistName>{name}</ArtistName>}
+        {id && <ArtistDetails>{id}</ArtistDetails>}
+      </MainContainer>
+    </ScrollView>
+  );
+};
 
 export default ArtistDetailView;
